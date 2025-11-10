@@ -99,6 +99,17 @@
     <button onclick="generateClamp()">Generate clamp()</button>
 
     <div id="results"></div>
+
+    <label style="margin-top: 25px;">Paste SVG từ Figma</label>
+<textarea id="svgInput" rows="8" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; font-family:monospace;"></textarea>
+
+<button onclick="cleanSVG()">🧹 Clean SVG</button>
+
+<div id="cleanedResult" class="result-box" style="margin-top:15px; display:none;">
+  <span id="cleanedSVG" style="word-break:break-word;"></span>
+  <button class="copy-btn" onclick="copyText(this, document.getElementById('cleanedSVG').textContent)">📋 Copy</button>
+</div>
+
   </div>
 
   <script>
@@ -140,6 +151,19 @@
         }, 1500);
       });
     }
+
+    function cleanSVG() {
+  let svg = document.getElementById("svgInput").value;
+
+  // Xóa <defs> và các url(#...) trong filter, clip-path, mask
+  svg = svg.replace(/<defs>[\s\S]*?<\/defs>/gi, '');
+  svg = svg.replace(/(clip-path|filter|mask)="url\(#.*?\)"/gi, '');
+
+  // Hiển thị kết quả
+  document.getElementById("cleanedSVG").textContent = svg.trim();
+  document.getElementById("cleanedResult").style.display = "flex";
+}
+
   </script>
 </body>
 </html>
