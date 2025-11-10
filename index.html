@@ -2,43 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Clamp Calculator</title>
+  <title>Clamp Calculator & SVG Cleaner</title>
   <style>
     body {
       font-family: system-ui, sans-serif;
       background: linear-gradient(135deg, #f9f9f9, #e9f0ff);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
     }
+    
     .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .column {
+      flex: 1;
+      min-width: 300px;
       background: white;
       padding: 25px 30px;
       border-radius: 16px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 500px;
     }
+    
     h2 {
       margin-bottom: 20px;
       font-size: 1.4rem;
       text-align: center;
       color: #333;
     }
+    
     label {
       display: block;
       margin: 10px 0 5px;
       font-weight: 600;
       color: #444;
     }
-    input {
+    
+    input, textarea {
       padding: 10px;
       width: 100%;
       border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 1rem;
+      box-sizing: border-box;
     }
+    
     button {
       margin-top: 18px;
       padding: 10px 18px;
@@ -50,10 +64,13 @@
       font-size: 1rem;
       font-weight: 600;
       transition: background 0.2s;
+      width: 100%;
     }
+    
     button:hover {
       background: #3451d1;
     }
+    
     .result-box {
       margin-top: 15px;
       background: #f4f6ff;
@@ -65,6 +82,7 @@
       justify-content: space-between;
       align-items: center;
     }
+    
     .copy-btn {
       margin-left: 15px;
       background: #eee;
@@ -74,42 +92,57 @@
       cursor: pointer;
       transition: background 0.2s;
       font-size: 0.9rem;
+      width: auto;
     }
+    
     .copy-btn.copied {
       background: #c8ffc8;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>✨ Fluid Clamp Generator</h2>
+    <!-- Cột trái: Fluid Clamp Generator -->
+    <div class="column">
+      <h2>✨ Fluid Clamp Generator</h2>
 
-    <label>Min Size (px)</label>
-    <input id="sizeMin" type="number" value="16">
+      <label>Min Size (px)</label>
+      <input id="sizeMin" type="number" value="16">
 
-    <label>Max Size (px)</label>
-    <input id="sizeMax" type="number" value="24">
+      <label>Max Size (px)</label>
+      <input id="sizeMax" type="number" value="24">
 
-    <label>Viewport Min (px)</label>
-    <input id="vpMin" type="number" value="360">
+      <label>Viewport Min (px)</label>
+      <input id="vpMin" type="number" value="360">
 
-    <label>Viewport Max (px)</label>
-    <input id="vpMax" type="number" value="1920">
+      <label>Viewport Max (px)</label>
+      <input id="vpMax" type="number" value="1920">
 
-    <button onclick="generateClamp()">Generate clamp()</button>
+      <button onclick="generateClamp()">Generate clamp()</button>
 
-    <div id="results"></div>
+      <div id="results"></div>
+    </div>
 
-    <label style="margin-top: 25px;">Paste SVG từ Figma</label>
-<textarea id="svgInput" rows="8" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; font-family:monospace;"></textarea>
+    <!-- Cột phải: SVG Cleaner -->
+    <div class="column">
+      <h2>🧹 SVG Cleaner</h2>
+      
+      <label>Paste SVG từ Figma</label>
+      <textarea id="svgInput" rows="8" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; font-family:monospace;"></textarea>
 
-<button onclick="cleanSVG()">🧹 Clean SVG</button>
+      <button onclick="cleanSVG()">Clean SVG</button>
 
-<div id="cleanedResult" class="result-box" style="margin-top:15px; display:none;">
-  <span id="cleanedSVG" style="word-break:break-word;"></span>
-  <button class="copy-btn" onclick="copyText(this, document.getElementById('cleanedSVG').textContent)">📋 Copy</button>
-</div>
-
+      <div id="cleanedResult" class="result-box" style="margin-top:15px; display:none;">
+        <span id="cleanedSVG" style="word-break:break-word;"></span>
+        <button class="copy-btn" onclick="copyText(this, document.getElementById('cleanedSVG').textContent)">📋 Copy</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -153,17 +186,16 @@
     }
 
     function cleanSVG() {
-  let svg = document.getElementById("svgInput").value;
+      let svg = document.getElementById("svgInput").value;
 
-  // Xóa <defs> và các url(#...) trong filter, clip-path, mask
-  svg = svg.replace(/<defs>[\s\S]*?<\/defs>/gi, '');
-  svg = svg.replace(/(clip-path|filter|mask)="url\(#.*?\)"/gi, '');
+      // Xóa <defs> và các url(#...) trong filter, clip-path, mask
+      svg = svg.replace(/<defs>[\s\S]*?<\/defs>/gi, '');
+      svg = svg.replace(/(clip-path|filter|mask)="url\(#.*?\)"/gi, '');
 
-  // Hiển thị kết quả
-  document.getElementById("cleanedSVG").textContent = svg.trim();
-  document.getElementById("cleanedResult").style.display = "flex";
-}
-
+      // Hiển thị kết quả
+      document.getElementById("cleanedSVG").textContent = svg.trim();
+      document.getElementById("cleanedResult").style.display = "flex";
+    }
   </script>
 </body>
 </html>
