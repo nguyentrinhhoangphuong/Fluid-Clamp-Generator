@@ -17,7 +17,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 30px;
-      max-width: 1000px;
+      max-width: 1400px;
       margin: 0 auto;
     }
     
@@ -108,7 +108,7 @@
 </head>
 <body>
   <div class="container">
-    <!-- Cột trái: Fluid Clamp Generator -->
+    <!-- Cột 1: Fluid Clamp Generator -->
     <div class="column">
       <h2>✨ Fluid Clamp Generator</h2>
 
@@ -129,18 +129,37 @@
       <div id="results"></div>
     </div>
 
-    <!-- Cột phải: SVG Cleaner -->
+    <!-- Cột 2: SVG Cleaner -->
     <div class="column">
       <h2>🧹 SVG Cleaner</h2>
       
       <label>Paste SVG từ Figma</label>
-      <textarea id="svgInput" rows="8" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; font-family:monospace;"></textarea>
+      <textarea id="svgInput" rows="6" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; font-family:monospace;"></textarea>
 
       <button onclick="cleanSVG()">Clean SVG</button>
 
       <div id="cleanedResult" class="result-box" style="margin-top:15px; display:none;">
         <span id="cleanedSVG" style="word-break:break-word;"></span>
         <button class="copy-btn" onclick="copyText(this, document.getElementById('cleanedSVG').textContent)">📋 Copy</button>
+      </div>
+    </div>
+
+    <!-- Cột 3: SVG Remover (Tính năng mới) -->
+    <div class="column">
+      <h2>🗑️ SVG Remover</h2>
+      
+      <label>Paste HTML/Code có chứa SVG</label>
+      <textarea id="htmlInput" rows="6" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; font-family:monospace;" placeholder="Dán HTML, CSS, JS hoặc bất kỳ code nào có chứa thẻ SVG..."></textarea>
+
+      <button onclick="removeSVG()">Remove SVG Tags</button>
+
+      <div id="removedResult" class="result-box" style="margin-top:15px; display:none;">
+        <span id="removedSVG" style="word-break:break-word;"></span>
+        <button class="copy-btn" onclick="copyText(this, document.getElementById('removedSVG').textContent)">📋 Copy</button>
+      </div>
+
+      <div style="margin-top: 10px; font-size: 0.9rem; color: #666;">
+        <strong>Chức năng:</strong> Loại bỏ hoàn toàn tất cả thẻ &lt;svg&gt;...&lt;/svg&gt; khỏi code
       </div>
     </div>
   </div>
@@ -185,6 +204,7 @@
       });
     }
 
+    // Tính năng 2: SVG Cleaner (giữ nguyên)
     function cleanSVG() {
       let svg = document.getElementById("svgInput").value;
 
@@ -195,6 +215,19 @@
       // Hiển thị kết quả
       document.getElementById("cleanedSVG").textContent = svg.trim();
       document.getElementById("cleanedResult").style.display = "flex";
+    }
+
+    // Tính năng 3: SVG Remover (mới)
+    function removeSVG() {
+      let html = document.getElementById("htmlInput").value;
+      
+      // Loại bỏ tất cả các thẻ <svg>...</svg> và nội dung bên trong
+      // Sử dụng regex để xóa từ thẻ mở <svg> đến thẻ đóng </svg>
+      const cleanedHtml = html.replace(/<svg[\s\S]*?<\/svg>/gi, '');
+      
+      // Hiển thị kết quả
+      document.getElementById("removedSVG").textContent = cleanedHtml.trim();
+      document.getElementById("removedResult").style.display = "flex";
     }
   </script>
 </body>
