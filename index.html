@@ -74,34 +74,68 @@
     .result-box {
       margin-top: 15px;
       background: #f4f6ff;
-      padding: 12px 15px;
+      padding: 15px;
       border-radius: 8px;
       border: 1px solid #d6dcff;
       font-family: monospace;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      position: relative;
+      min-height: 60px;
+      max-height: 200px;
+      overflow-y: auto;
+      word-break: break-all;
+    }
+    
+    .result-content {
+      padding-right: 80px; /* Để chỗ cho nút copy */
+      max-height: 170px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      line-height: 1.4;
     }
     
     .copy-btn {
-      margin-left: 15px;
-      background: #eee;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #4a6cf7;
       border: none;
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 6px;
       cursor: pointer;
       transition: background 0.2s;
-      font-size: 0.9rem;
-      width: auto;
+      font-size: 0.85rem;
+      color: white;
+      font-weight: 500;
+      z-index: 10;
+    }
+    
+    .copy-btn:hover {
+      background: #3451d1;
     }
     
     .copy-btn.copied {
-      background: #c8ffc8;
+      background: #10b981;
+    }
+    
+    .result-info {
+      margin-top: 5px;
+      font-size: 0.8rem;
+      color: #666;
+      text-align: right;
     }
     
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
+      }
+      
+      .result-box {
+        max-height: 150px;
+      }
+      
+      .result-content {
+        max-height: 120px;
+        padding-right: 70px;
       }
     }
   </style>
@@ -139,8 +173,9 @@
       <button onclick="cleanSVG()">Clean SVG</button>
 
       <div id="cleanedResult" class="result-box" style="margin-top:15px; display:none;">
-        <span id="cleanedSVG" style="word-break:break-word;"></span>
+        <div class="result-content" id="cleanedSVG"></div>
         <button class="copy-btn" onclick="copyText(this, document.getElementById('cleanedSVG').textContent)">📋 Copy</button>
+        <div class="result-info">Kéo để xem thêm</div>
       </div>
     </div>
 
@@ -154,8 +189,9 @@
       <button onclick="removeSVG()">Remove SVG Tags</button>
 
       <div id="removedResult" class="result-box" style="margin-top:15px; display:none;">
-        <span id="removedSVG" style="word-break:break-word;"></span>
+        <div class="result-content" id="removedSVG"></div>
         <button class="copy-btn" onclick="copyText(this, document.getElementById('removedSVG').textContent)">📋 Copy</button>
+        <div class="result-info">Kéo để xem thêm</div>
       </div>
 
       <div style="margin-top: 10px; font-size: 0.9rem; color: #666;">
@@ -183,11 +219,11 @@
 
       document.getElementById("results").innerHTML = `
         <div class="result-box">
-          <span>${fullFormula}</span>
+          <div class="result-content">${fullFormula}</div>
           <button class="copy-btn" onclick="copyText(this, '${fullFormula}')">📋 Copy</button>
         </div>
         <div class="result-box">
-          <span>${shortFormula}</span>
+          <div class="result-content">${shortFormula}</div>
           <button class="copy-btn" onclick="copyText(this, '${shortFormula}')">📋 Copy</button>
         </div>
       `;
@@ -214,7 +250,7 @@
 
       // Hiển thị kết quả
       document.getElementById("cleanedSVG").textContent = svg.trim();
-      document.getElementById("cleanedResult").style.display = "flex";
+      document.getElementById("cleanedResult").style.display = "block";
     }
 
     // Tính năng 3: SVG Remover (mới)
@@ -227,7 +263,7 @@
       
       // Hiển thị kết quả
       document.getElementById("removedSVG").textContent = cleanedHtml.trim();
-      document.getElementById("removedResult").style.display = "flex";
+      document.getElementById("removedResult").style.display = "block";
     }
   </script>
 </body>
